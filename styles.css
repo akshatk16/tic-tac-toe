@@ -1,0 +1,145 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+button::-moz-focus-inner {
+	border: 0;
+}
+
+:root {
+	--spot-w: 100px;
+	--token-w: calc(var(--spot-w) * 0.8)
+}
+
+body {
+	margin: 0;
+	background-color: rgb(217, 204, 255)
+}
+
+.grid {
+	width: 100vw;
+	height: 100vh;
+	display: grid;
+	justify-content: center;
+	align-content: center;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: repeat(3, auto)
+}
+
+.spot {
+	width: var(--spot-w);
+	height: var(--spot-w);
+	border: solid 1px black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	cursor: crosshair;
+}
+
+/* changing the cursor over already used spots */
+.spot.x, .spot.o {
+	cursor: not-allowed;
+}
+
+/* removing unwanted borders */
+.spot:first-child, .spot:nth-child(2), .spot:nth-child(3) {
+	border-top: none;
+}
+
+.spot:last-child, .spot:nth-child(8), .spot:nth-child(7) {
+	border-bottom: none;
+}
+
+.spot:nth-child(3n+1) {
+	border-left: none;
+}
+
+.spot:nth-child(3n+3) {
+	border-right: none;
+}
+
+/* draw the X shape */
+.spot.x::after, .spot.x::before,
+.grid.x .spot:not(.x):not(.o):hover::before, .grid.x .spot:not(.x):not(.o):hover::after {
+	content: '';
+	width: calc(var(--token-w) * 0.1);
+	position: absolute;
+	border-radius: 40%;
+	height: var(--token-w);
+	background-color: black;
+}
+
+.spot.x::after, .grid.x .spot:not(.x):not(.o):hover::after {
+	transform: rotate(45deg);
+}
+
+.spot.x::before, .grid.x .spot:not(.x):not(.o):hover::before {
+	transform: rotate(-45deg);
+}
+
+/* draw the O shape */
+.spot.o::before, .grid.o .spot:not(.x):not(.o):hover::before {
+	content: '';
+	width: calc(var(--token-w) * 0.9);
+	position: absolute;
+	border-radius: 50%;
+	height: calc(var(--token-w) * 0.9);
+	background-color: black;
+}
+
+.spot.o::after, .grid.o .spot:not(.x):not(.o):hover::after {
+	content: '';
+	width: calc(var(--token-w) * 0.75);
+	position: absolute;
+	border-radius: 50%;
+	height: calc(var(--token-w) * 0.75);
+	background-color: rgb(217, 204, 255);
+}
+
+/* adding hover */
+.grid.x .spot:not(.x):not(.o):hover::before,
+.grid.x .spot:not(.x):not(.o):hover::after,
+.grid.o .spot:not(.x):not(.o):hover::before {
+	background-color: rgba(150, 180, 150, 0.9);
+}
+
+/* winner */
+.win {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(70, 80, 90, 0.9);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-family: sans-serif;
+	font-size: 4rem;
+	font-weight: bold;
+	display: none;
+	cursor: default;
+}
+
+.win button {
+	font-size: 2rem;
+	background-color: #7e7e7e;
+	border: solid 3px #333;
+	color: white;
+	outline: none;
+	padding: .1em .25em;
+	cursor: pointer;
+}
+
+.win button:hover {
+	font-size: 2rem;
+	background-color: rgba(0, 0, 0);
+	border: solid 3px rgba(0, 0, 0)
+}
+
+.win.show {
+	display: flex;
+}

@@ -2,6 +2,7 @@ const CLASS_X = 'x'
 const CLASS_O = 'o'
 
 let o_turn
+let ai
 
 const WINS = [
 	// rows
@@ -21,11 +22,11 @@ const WINS = [
 const spots = document.querySelectorAll('[spot-pos]')
 const grid = document.getElementById('grid')
 const winnerText = document.querySelector('[winner]')
+const startMenu = document.getElementById('startMenu')
 const win = document.getElementById('win')
 const restartButton = document.getElementById('restartButton')
-
-
-startGame()
+const playComp = document.getElementById('com_p')
+const playHuman = document.getElementById('two_p')
 
 
 function handleClick(e) {
@@ -35,9 +36,9 @@ function handleClick(e) {
 	spot.classList.add(currentClass)
 
 	// check for winning combinations
-	if (winner(currentClass)) {
+	if (winner(spots, currentClass)) {
 		endGame(false)
-	} else if (isDraw()) {
+	} else if (isDraw(spots)) {
 		endGame(true)
 	} else {
 		// change token
@@ -45,58 +46,122 @@ function handleClick(e) {
 
 		//add hover class
 		addHover()
+
+		// trigger ai move if required
+		if (o_turn && ai) {
+			playAI()
+		}
 	}
 }
 
 
 function addHover() {
+	// remove current hover class
 	grid.classList.remove(CLASS_X)
 	grid.classList.remove(CLASS_O)
+
+	// compute reqd hover class
 	let hoverClass = o_turn ? CLASS_O : CLASS_X
+
+	// add reqd hover class
 	grid.classList.add(hoverClass)
 }
 
 
-function winner(currentClass) {
+function winner(board, currentClass) {
+	// check for win condition
 	return WINS.some(combination => {
 		return combination.every(index => {
-			return spots[index].classList.contains(currentClass)
+			return board[index].classList.contains(currentClass)
 		})
 	})
 }
 
 
-function startGame() {
-	o_turn = false
-	spots.forEach(spot => {
-		spot.classList.remove(CLASS_X)
-		spot.classList.remove(CLASS_O)
-		spot.removeEventListener('click', handleClick)
-		spot.addEventListener('click', handleClick, {
-			once: true
-		})
-	})
-	addHover()
-	win.classList.remove('show')
-
-}
-
-
-function isDraw() {
-	return [...spots].every(spot => {
+function isDraw(board) {
+	// check for draw condition
+	return [...board].every(spot => {
 		return spot.classList.contains(CLASS_O) || spot.classList.contains(CLASS_X)
 	})
 }
 
 
-function endGame(draw) {
+function startGame() {
+	// start condition - X turn
+	o_turn = false
+
+	// hide start menu
+	startMenu.classList.remove('show')
+
+	// clear previous grid and add onClickEvents
+	spots.forEach(spot => {
+		spot.classList.remove(CLASS_X)
+		spot.classList.remove(CLASS_O)
+		spot.removeEventListener('click', handleClick)
+		spot.addEventListener('click', handleClick, { once: true }
+		)
+	})
+
+	// add hover
+	addHover()
+}
+
+
+function startGameAI() {
+	// if player choose to play with ai
+	ai = true
+	startGame()
+}
+
+
+function playAI() {
+	// compute best possible move
+	optimalMove(spots)
+
+	// check if ai wins
+	if (winner(spots, CLASS_O)) {
+		endGame(false, true)
+	}
+
+	// switch turns
+	o_turn = !o_turn
+
+	// add hover
+	addHover()
+}
+
+
+function endGame(draw, comp) {
+	if (comp) {
+		// switch for o win text
+		o_turn = true
+	}
 	if (draw){
 		winnerText.innerHTML = 'TIED!'
 	} else {
 		winnerText.innerHTML = `${o_turn ? "O WINS!" : "X WINS!"}`
 	}
+
+	// show win overlay
 	win.classList.add('show')
 }
 
 
-restartButton.addEventListener('click', startGame)
+function restartGame() {
+	// display start menu
+	ai = false
+	startMenu.classList.add('show')
+
+	// hide win overlay
+	win.classList.remove('show')
+
+	// start game
+	playComp.addEventListener('click', startGameAI)
+	playHuman.addEventListener('click', startGame)
+}
+
+
+// onClick events
+restartButton.addEventListener('click', restartGame)
+playComp.addEventListener('click', startGameAI)
+playHuman.addEventListener('click', startGame)

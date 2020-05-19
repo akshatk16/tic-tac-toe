@@ -106,7 +106,7 @@ body {
 }
 
 /* winner */
-.win {
+.overlay {
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -124,22 +124,27 @@ body {
 	cursor: default;
 }
 
-.win button {
+.startMenu {
+	flex-direction: row;
+}
+
+button {
 	font-size: 2rem;
 	background-color: #7e7e7e;
 	border: solid 3px #333;
 	color: white;
 	outline: none;
 	padding: .1em .25em;
+	margin: 0 .1em;
 	cursor: pointer;
 }
 
-.win button:hover {
+.win button:hover, .startMenu button:hover {
 	font-size: 2rem;
 	background-color: rgba(0, 0, 0);
 	border: solid 3px rgba(0, 0, 0)
 }
 
-.win.show {
+.win.show, .startMenu.show {
 	display: flex;
 }

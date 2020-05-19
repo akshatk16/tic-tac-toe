@@ -2,7 +2,7 @@ function optimalMove(board) {
 	let bestMove
 	let recScore = -10000
 	let move
-	for(let i = 0; i < board.length; i++) {
+	for (let i = 0; i < board.length; i++) {
 		if (!(board[i].classList.contains(CLASS_O) || board[i].classList.contains(CLASS_X))) {
 			// temporarily add player class
 			board[i].classList.add(CLASS_O)
@@ -37,12 +37,12 @@ function minimax(board, depth, aiMove) {
 		return -100
 	} else if (isDraw(board)) {
 		return 0
-	// evaluate minimax recursively
+		// evaluate minimax recursively
 	} else {
 		if (aiMove) {
 			// maximising player
 			let bestVal = -10000
-			for(let j = 0; j < board.length; j++) {
+			for (let j = 0; j < board.length; j++) {
 				if (!(board[j].classList.contains(CLASS_O) || board[j].classList.contains(CLASS_X))) {
 					// temporarily add player class
 					board[j].classList.add(CLASS_O)
@@ -62,7 +62,7 @@ function minimax(board, depth, aiMove) {
 			return bestVal
 		} else {
 			let bestVal = 10000
-			for(let k = 0; k < board.length; k++) {
+			for (let k = 0; k < board.length; k++) {
 				if (!(board[k].classList.contains(CLASS_O) || board[k].classList.contains(CLASS_X))) {
 					// temporarily add player class
 					board[k].classList.add(CLASS_X)

@@ -98,8 +98,9 @@ function startGame() {
 		spot.classList.remove(CLASS_X)
 		spot.classList.remove(CLASS_O)
 		spot.removeEventListener('click', handleClick)
-		spot.addEventListener('click', handleClick, { once: true }
-		)
+		spot.addEventListener('click', handleClick, {
+			once: true
+		})
 	})
 
 	// add hover
@@ -136,7 +137,7 @@ function endGame(draw, comp) {
 		// switch for o win text
 		o_turn = true
 	}
-	if (draw){
+	if (draw) {
 		winnerText.innerHTML = 'TIED!'
 	} else {
 		winnerText.innerHTML = `${o_turn ? "O WINS!" : "X WINS!"}`
